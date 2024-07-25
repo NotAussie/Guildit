@@ -47,14 +47,15 @@ app = FastAPI(
 )
 
 # Setup logfire
-configure(
-    token="nxcl1rhwTwCypDXVTHTh93vZQ1tywyWyKn2rrZMll1Xw",
-    pydantic_plugin=PydanticPlugin(record="all"),
-)
-basicConfig(handlers=[LogfireLoggingHandler()])
-logger.addHandler(LogfireLoggingHandler())
-logger.addHandler(StreamHandler())
-instrument_fastapi(app, capture_headers=True)
+if config["logfire"]["enabled"]:
+    configure(
+        token=config["logfire"]["token"],
+        pydantic_plugin=PydanticPlugin(record="all"),
+    )
+    basicConfig(handlers=[LogfireLoggingHandler()])
+    logger.addHandler(LogfireLoggingHandler())
+    logger.addHandler(StreamHandler())
+    instrument_fastapi(app, capture_headers=True)
 
 
 # Import routers

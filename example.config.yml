@@ -1,10 +1,14 @@
 ---
 
+# Configuration for Guilded integration
 guilded:
-  webhookApi: "https://media.guilded.gg/webhooks/"
+  webhookApi: "https://media.guilded.gg/webhooks/{}/{}"  # The API endpoint for Guilded webhooks
 
+# Configuration for Redis database connection
 redis:
+  uri: "[ Connection URI ]"  # The connection URI for Redis
 
-  username: "[ Redis username ]"
-
-  password: "[ Redis password ]"
+# Configuration for Logfire logging service
+logfire:
+  enabled: false  # Set to true to enable Logfire
+  token: "[ Logfire token ]"  # The authentication token for Logfire

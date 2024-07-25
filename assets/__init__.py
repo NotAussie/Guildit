@@ -2,4 +2,4 @@ guilditLogo = "https://raw.githubusercontent.com/NotAussie/GuildGit-Server/main/
 guilditIcon = (
     "https://raw.githubusercontent.com/NotAussie/GuildGit-Server/main/assets/icon.png"
 )
-octocatAnimation = "https://raw.githubusercontent.com/NotAussie/GuildGit-Server/main/assets/octocat-animation.gif"
+octocatAnimation = "https://raw.githubusercontent.com/NotAussie/GuildGit-Server/main/assets/octocat-animation.webp"

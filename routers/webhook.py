@@ -37,7 +37,7 @@ async def webhooks(hookId: str, hookToken: str, request: Request):
         )
 
     await queue.add(
-        url=f"{config['guilded']['webhookApi']}/{hookId}/{hookToken}",
+        url=config["guilded"]["webhookApi"].format(hookId, hookToken),
         embed=await handler(data=await request.json()),
     )
 
