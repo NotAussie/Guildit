@@ -1,0 +1,10 @@
+---
+
+guilded:
+  webhookApi: "https://media.guilded.gg/webhooks/"
+
+redis:
+
+  username: "[ Redis username ]"
+
+  password: "[ Redis password ]"
