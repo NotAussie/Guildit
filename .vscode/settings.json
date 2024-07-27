@@ -1,9 +1,3 @@
 {
-    "spellright.language": [
-        "en"
-    ],
-    "spellright.documentTypes": [
-        "latex",
-        "plaintext"
-    ]
+    "python.analysis.typeCheckingMode": "standard", // We **REQUIRE** standard type checks!
 }

@@ -1,7 +1,9 @@
 # FastAPI imports
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.logger import logger
+from fastapi.staticfiles import StaticFiles
 
 # Ratelimiter imports
 from fastapi_limiter import FastAPILimiter
@@ -9,8 +11,8 @@ from contextlib import asynccontextmanager
 import redis.asyncio as redis
 
 # Logfire imports
+import logfire
 from logging import basicConfig, StreamHandler
-from logfire import configure, instrument_fastapi, LogfireLoggingHandler, PydanticPlugin
 
 # Utility imports
 import subprocess
@@ -42,30 +44,48 @@ async def lifespan(_: FastAPI):
 app = FastAPI(
     title="Guildit",
     version=f"{branch.title()} ({sha})",
-    description="All public GuilIt routes",
+    summary="We enforce rate limits, please do not spam our API or you will be blocked.",
+    description="All public Guildit routes...",
     lifespan=lifespan,
+    docs_url=None,
+    redoc_url=None,
 )
+app.mount(
+    "/assets", StaticFiles(directory="assets"), name="assets"
+)  # Mount the assets directory
 
 # Setup logfire
 if config["logfire"]["enabled"]:
-    configure(
+    logfire.configure(
         token=config["logfire"]["token"],
-        pydantic_plugin=PydanticPlugin(record="all"),
+        pydantic_plugin=logfire.PydanticPlugin(record="all"),
     )
-    basicConfig(handlers=[LogfireLoggingHandler()])
-    logger.addHandler(LogfireLoggingHandler())
+    basicConfig(handlers=[logfire.LogfireLoggingHandler()])
+    logger.addHandler(logfire.LogfireLoggingHandler())
     logger.addHandler(StreamHandler())
-    instrument_fastapi(app, capture_headers=True)
-
+    logfire.instrument_fastapi(app, capture_headers=True)
+    logfire.instrument_redis()
+    logfire.instrument_aiohttp_client()
+    logfire.install_auto_tracing(
+        modules=[
+            "handlers",
+            "utilities",
+        ]
+    )
 
 # Import routers
 from routers.webhook import router as webhook
+from routers.pages import router as pages
 
 # Include routers
 app.include_router(webhook)
+app.include_router(pages)
 
 
-# Convert / into a redirect
-@app.get("/", include_in_schema=False)
-async def index():
-    return RedirectResponse("/docs")
+@app.get("/docs", include_in_schema=False)
+async def swagger_ui_html():
+    return get_swagger_ui_html(
+        openapi_url="/openapi.json",
+        title="Guildit",
+        swagger_favicon_url="/assets/guildit.webp",
+    )
