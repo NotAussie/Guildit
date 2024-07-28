@@ -7,16 +7,21 @@ from assets import guilditLogo, guilditIcon
 from datetime import datetime, timezone
 
 
-async def post(url: str, embed: Embed | None, footer: str, name: str) -> None:
+async def post(
+    url: str,
+    embed: Embed | None,
+    action: str,
+    footer: str,
+) -> None:
     """Handles any pre-processing then posts to Guilded"""
     hook = AsyncWebhook(
         url=url,
         avatar=guilditIcon,
-        username=name,
+        username="guildit.dev",
     )
 
     if embed is None:
-        raise HTTPException(501)
+        raise HTTPException(501, f'Event action "{action}" isn\'t supported')
     assert embed != None  # This is a fail safe that should NEVER trigger
 
     if not embed._timestamp:

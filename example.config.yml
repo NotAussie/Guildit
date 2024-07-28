@@ -12,3 +12,10 @@ redis:
 logfire:
   enabled: false  # Set to true to enable Logfire
   token: "[ Logfire token ]"  # The authentication token for Logfire
+
+# Configuration for your Guildit instance
+guildit:
+  authentication:
+    enabled: false  # If enabled payloads must provide a valid token in their secret
+    storagePath: "./data/"  # This is where Guildit will create "hashes.json"
+    adminTokenHash: "[ A hash of your admin password ]"  # This must be set if you want to create authentication tokens

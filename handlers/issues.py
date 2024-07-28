@@ -40,4 +40,19 @@ async def Issue(data: dict) -> Embed | None:
 
         return embed
 
-    # TODO: Assigned, closed, deleted, edited, labeled, locked, milestoned, reopened, transferred, unassigned, unlabeled, unlocked, unpinned.
+    # Handle an issue being closed
+    elif action == "closed":
+        # Create the embed
+        embed = Embed(
+            url=data["issue"]["html_url"],
+            title=f"Issue #{data['issue']['number']} has been pinned",
+        )
+
+        # Set the author
+        embed.set_author(
+            name=data["sender"]["login"],
+            icon_url=data["sender"]["avatar_url"],
+            url=data["sender"]["html_url"],
+        )
+
+        return embed
